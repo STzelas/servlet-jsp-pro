@@ -2,6 +2,7 @@
 
 <html>
 <body>
-<h2><%= "Γεια σου" %></h2>
+<h1>Ημερομηνία και Ώρα</h1>
+<h2>${requestScope.currentDateTimeStr}</h2>
 </body>
 </html>
