@@ -2,10 +2,7 @@ package gr.aueb.cf.helloapp.controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 
@@ -15,20 +12,40 @@ public class InspectRequestController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        response.getWriter().write("Session id: " + request.getSession() + "\n"); // Αν υπάρχει session θα μας το δείξει. Αν όχι επιστρέφει null
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
 
-        Cookie[] cookies = request.getCookies();
+        // false: getCurrentSession if exists else return null
+        // true:  getCurrentSession if exists else create new Session
+//        HttpSession newSession = request.getSession(true);
 
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("JSESSIONID")) {
-                    response.getWriter().write("Cookie name :" + cookie.getName() + ", Cookie value " + cookie.getValue() + "\n");
-                }
-            }
+        HttpSession session = request.getSession(false);
+
+        if (username != null && username.equals("sotiris") && password != null && password.equals("12345")) {
+
+            session.setAttribute("username", username);
+            session.setAttribute("role", "TEACHER");  // Η με enum πχ UserRole.TEACHER.name()
+
         }
 
-        response.getWriter().write("Request URI: " + request.getRequestURI() + "\n");   // URI, όλο το πάνω που έχει ο browser
-        response.getWriter().write("Request Context Path: " + request.getContextPath() + "\n");  // Context Path, μέρος μετά το base URL
-        response.getWriter().write("Request Servlet Path: " + request.getServletPath() + "\n");  // controller
+        response.sendRedirect("/school-app/teachers");
+        return;
+
+
+//        response.getWriter().write("Session id: " + request.getSession() + "\n"); // Αν υπάρχει session θα μας το δείξει. Αν όχι επιστρέφει null
+//
+//        Cookie[] cookies = request.getCookies();
+//
+//        if (cookies != null) {
+//            for (Cookie cookie : cookies) {
+//                if (cookie.getName().equals("JSESSIONID")) {
+//                    response.getWriter().write("Cookie name :" + cookie.getName() + ", Cookie value " + cookie.getValue() + "\n");
+//                }
+//            }
+//        }
+//
+//        response.getWriter().write("Request URI: " + request.getRequestURI() + "\n");   // URI, όλο το πάνω που έχει ο browser
+//        response.getWriter().write("Request Context Path: " + request.getContextPath() + "\n");  // Context Path, μέρος μετά το base URL
+//        response.getWriter().write("Request Servlet Path: " + request.getServletPath() + "\n");  // controller
     }
 }
